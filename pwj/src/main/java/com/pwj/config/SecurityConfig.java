@@ -13,9 +13,10 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/login").permitAll().anyRequest().authenticated())
+		.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/login","/signup","/js/**","/css/**").permitAll().anyRequest().authenticated())
 				.formLogin(formLogin -> formLogin.loginPage("/login").defaultSuccessUrl("/"))
-				.logout(logout->logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/").invalidateHttpSession(true));
+				.logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+						.logoutSuccessUrl("/").invalidateHttpSession(true));
 		return http.build();
 	}
 }
