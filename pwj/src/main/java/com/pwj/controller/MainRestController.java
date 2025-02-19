@@ -3,10 +3,13 @@ package com.pwj.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pwj.service.MainService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 public class MainRestController {
@@ -21,5 +24,12 @@ public class MainRestController {
 		return mainService.checkParam(param_name, param_value);
 //		if(mainService.checkParam(param_name,param_value)) return ResponseEntity.ok("true");
 //		else return ResponseEntity.ok("false");
+	}
+	
+	@PostMapping("/api/login")
+	public ResponseEntity<Object> apiLogin(HttpServletRequest request){
+		System.out.println("들어옴: "+ request.getLocalAddr());
+		
+		return ResponseEntity.ok("success");
 	}
 }
