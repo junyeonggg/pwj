@@ -1,5 +1,6 @@
 package com.pwj.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,33 +8,46 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.pwj.filter.JwtAuthenticationFilter;
+import com.pwj.provider.JwtTokenProvider;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 		.csrf(csrf->csrf.ignoringRequestMatchers("/api/**"))
 		.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/", "/api/login","/login", "/signup/**", "/js/**", "/css/**")
+						auth -> auth.requestMatchers("/", "/api/**","/login", "/signup/**", "/js/**", "/css/**")
 								.permitAll().anyRequest().authenticated())
 				.formLogin(formLogin -> formLogin.loginPage("/login").defaultSuccessUrl("/"))
 				.logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-						.logoutSuccessUrl("/").invalidateHttpSession(true));
+						.logoutSuccessUrl("/").invalidateHttpSession(true))
+				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+				
 		return http.build();
 	}
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
+//	@Bean
+//	public UsernamePasswordAuthenticationFilter asswordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
+	
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 	    CorsConfiguration config = new CorsConfiguration();
