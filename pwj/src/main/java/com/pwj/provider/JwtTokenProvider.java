@@ -52,10 +52,13 @@ public class JwtTokenProvider {
 	}
 
 	public Authentication getAuthentication(String token) {
-		UserDetails userDetails = securityService.loadUserByUsername(getUsername(token));
-		
-		return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+		System.out.println("UserDetails 불러오기 시도... ");
+		UserDetails userDetails = securityService.loadUserByUsername(getUsername(token),"jwt");
+		System.out.println("UserDetails 불러오기 완료! "+userDetails.toString());
+//		return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+		return new UsernamePasswordAuthenticationToken(getUsername(token),null,userDetails.getAuthorities());
 	}
+	// 다음번에 토큰에 권한도 저장하여 보내기
 
 	private String getUsername(String token) {
 		String userid = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody().getSubject();

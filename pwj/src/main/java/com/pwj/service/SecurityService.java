@@ -32,5 +32,12 @@ public class SecurityService implements UserDetailsService{
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		return new User(user.getUserid(),passwordEncoder.encode(user.getPwd()),authorities);
 	}
+
+	public UserDetails loadUserByUsername(String username, String string) {
+		System.out.println("loadUserByUsername jwt 들어옴 username : "+username);
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		return new User(username,"",authorities);
+	}
 	
 }

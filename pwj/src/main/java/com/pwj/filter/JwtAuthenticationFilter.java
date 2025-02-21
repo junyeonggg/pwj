@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.pwj.provider.JwtTokenProvider;
@@ -35,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 			Authentication authentication = jwtTokenProvider.getAuthentication(token);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
-		 
 		// context Holder 에 authentication 객체를 저장하고 넘긴다. doFilter
 		filterChain.doFilter(request, response);
 	}
